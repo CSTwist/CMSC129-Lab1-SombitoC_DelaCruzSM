@@ -28,6 +28,7 @@ Thumbs.db
 
 .env
 .env.*
+firebase.js
 
 # React build
 build/
