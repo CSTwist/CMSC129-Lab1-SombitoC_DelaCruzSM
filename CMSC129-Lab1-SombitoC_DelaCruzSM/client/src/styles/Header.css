@@ -1,0 +1,31 @@
+/***** HEADER COMPONENT CSS *****/
+
+/* APP COLORS */
+:root {
+  --coffee: #7F5539;
+  --toffee-brown: #9C6644;
+  --copper: #B08968;
+  --tan: #DDB892;
+  --paleoak: #E6CCB2;
+  --cream: #EDE0D4;
+}
+
+/* Apply the image as a background to the container itself */
+.header-container {
+    width: 100%;
+    height: 115px; 
+    
+    background-image: url('../assets/background.jpg'); 
+    background-size: cover;
+    background-position: center; 
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.title-header {
+    color: var(--cream, #EDE0D4); 
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: 36px;
+    font-style: italic;
+    font-weight: 400;
+}

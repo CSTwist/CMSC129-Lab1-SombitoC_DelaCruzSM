@@ -1,0 +1,21 @@
+/***** SEARCH BAR COMPONENT CSS *****/
+
+/* APP COLORS */
+:root {
+  --coffee: #7F5539;
+  --toffee-brown: #9C6644;
+  --copper: #B08968;
+  --tan: #DDB892;
+  --paleoak: #E6CCB2;
+  --cream: #EDE0D4;
+}
+
+.search-bar {
+    display: flex;
+    width: 274px;
+    padding: 8px 14px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+}
