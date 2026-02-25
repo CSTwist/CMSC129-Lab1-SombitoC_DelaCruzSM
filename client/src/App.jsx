@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
 import LoginPage from './pages/LoginPage.jsx'
 import SignupPage from './pages/SignUpPage.jsx'
+import DashboardPage from './pages/DashboardPage.jsx'
 
 /**
  * App.jsx is the main component/container of the React application. 
@@ -19,7 +20,10 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         
         {/* SIGN UP PAGE ROUTE */}
-        <Route path="/signup" element={<SignupPage />} />        
+        <Route path="/signup" element={<SignupPage />} />   
+
+        <Route path="/dashboard" element={<DashboardPage />} />
+
 
       </Routes>
     </BrowserRouter>

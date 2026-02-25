@@ -50,7 +50,7 @@ function AuthForm({ form, onSubmit }) {
                         <div className='d-flex align-items-center mb-4'>
                                 <div className='logo me-2'> </div>
                                
-                                <h1 className='title-header m-0'>The Journal</h1>
+                                <h1 className='auth-title-header m-0'>The Journal</h1>
                         </div>
 
                         <Form onSubmit={ handleSubmit } className="auth-form">
