@@ -3,72 +3,61 @@ import { Container, Modal, Button, Form } from 'react-bootstrap';
 import '../styles/DashboardContent.css';
 import JournalEntry from '../components/JournalEntry.jsx';
 
-// Firebase
-import { db } from '../firebase';
-import { collection, query, onSnapshot, addDoc, doc, deleteDoc } from 'firebase/firestore';
-
 function DashboardContent({ user }) {
     const [journals, setJournals] = useState([]);
     const [username, setUsername] = useState("");
     
-    // Modal state for adding a journal
     const [showModal, setShowModal] = useState(false);
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
-    // 1. Fetch User Profile (Username)
-    useEffect(() => {
+    // 1. Fetch Journals from Express
+    const fetchJournals = async () => {
         if (!user) return;
-        const unsubscribe = onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
-            if (docSnap.exists()) {
-                setUsername(docSnap.data().username);
-            }
-        });
-        return () => unsubscribe();
+        try {
+            const response = await fetch(`http://localhost:5000/api/users/${user.uid}/journals`);
+            const data = await response.json();
+            setJournals(data);
+        } catch (error) {
+            console.error("Error fetching journals", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchJournals();
     }, [user]);
 
-    // 2. Fetch Journals Subcollection
-    useEffect(() => {
-        if (!user) return;
-        
-        // Target: users -> [User ID] -> journals
-        const q = query(collection(db, 'users', user.uid, 'journals'));
-        
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const journalsData = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-            
-            // Sort by newest first
-            journalsData.sort((a, b) => b.createdAt - a.createdAt);
-            setJournals(journalsData);
-        });
-
-        return () => unsubscribe();
-    }, [user]);
-
-    // 3. Save a new Journal
+    // 2. Save a new Journal via Express
     const handleSaveJournal = async () => {
         if (!title.trim() || !content.trim()) return;
         try {
-            await addDoc(collection(db, 'users', user.uid, 'journals'), {
-                title: title,
-                content: content,
-                createdAt: Date.now() // Timestamp
+            const response = await fetch(`http://localhost:5000/api/users/${user.uid}/journals`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, content })
             });
-            setShowModal(false);
-            setTitle("");
-            setContent("");
+            
+            if (response.ok) {
+                setShowModal(false);
+                setTitle("");
+                setContent("");
+                fetchJournals(); // Refresh list after adding
+            }
         } catch (e) {
             console.error("Error adding document: ", e);
         }
     };
 
-    // 4. Delete a Journal
+    // 3. Delete a Journal via Express
     const handleDeleteJournal = async (journalId) => {
         try {
-            await deleteDoc(doc(db, 'users', user.uid, 'journals', journalId));
+            const response = await fetch(`http://localhost:5000/api/users/${user.uid}/journals/${journalId}`, {
+                method: 'DELETE'
+            });
+            
+            if (response.ok) {
+                fetchJournals(); // Refresh list after deleting
+            }
         } catch (e) {
             console.error("Error deleting document: ", e);
         }
