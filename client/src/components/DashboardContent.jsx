@@ -3,36 +3,43 @@ import { Container, Modal, Button, Form } from 'react-bootstrap';
 import '../styles/DashboardContent.css';
 import JournalEntry from '../components/JournalEntry.jsx';
 
+// --- IMPORT REACT QUILL ---
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // Standard rich text theme
+
 function DashboardContent({ user }) {
     const [journals, setJournals] = useState([]);
     const [username, setUsername] = useState("");
     
+    // --- CREATE STATE ---
     const [showModal, setShowModal] = useState(false);
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
-        // 1. Fetch User Profile (Username) from Express
+    // --- EDIT STATE ---
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editEntryId, setEditEntryId] = useState(null);
+    const [editTitle, setEditTitle] = useState("");
+    const [editContent, setEditContent] = useState("");
+
+    // 1. Fetch User Profile
     useEffect(() => {
         if (!user) return;
-        
         const fetchUserProfile = async () => {
             try {
                 const response = await fetch(`http://localhost:5000/api/users/${user.uid}`);
                 if (response.ok) {
                     const data = await response.json();
                     setUsername(data.username);
-                } else {
-                    console.error("Failed to fetch user data");
                 }
             } catch (error) {
                 console.error("Error fetching profile", error);
             }
         };
-
         fetchUserProfile();
     }, [user]);
 
-    // 2. Fetch Journals from Express
+    // 2. Fetch Journals
     const fetchJournals = async () => {
         if (!user) return;
         try {
@@ -48,9 +55,12 @@ function DashboardContent({ user }) {
         fetchJournals();
     }, [user]);
 
-    // 3. Save a new Journal via Express
+    // 3. Save a new Journal
     const handleSaveJournal = async () => {
-        if (!title.trim() || !content.trim()) return;
+        // Strip HTML tags to ensure the entry isn't just empty spaces
+        const plainTextContent = content.replace(/<[^>]+>/g, '');
+        if (!title.trim() || !plainTextContent.trim()) return;
+        
         try {
             const response = await fetch(`http://localhost:5000/api/users/${user.uid}/journals`, {
                 method: 'POST',
@@ -62,25 +72,51 @@ function DashboardContent({ user }) {
                 setShowModal(false);
                 setTitle("");
                 setContent("");
-                fetchJournals(); // Refresh list after adding
+                fetchJournals(); 
             }
         } catch (e) {
             console.error("Error adding document: ", e);
         }
     };
 
-    // 4. Delete a Journal via Express
+    // 4. Delete a Journal
     const handleDeleteJournal = async (journalId) => {
         try {
             const response = await fetch(`http://localhost:5000/api/users/${user.uid}/journals/${journalId}`, {
                 method: 'DELETE'
             });
-            
-            if (response.ok) {
-                fetchJournals(); // Refresh list after deleting
-            }
+            if (response.ok) fetchJournals(); 
         } catch (e) {
             console.error("Error deleting document: ", e);
+        }
+    };
+
+    // --- TRIGGER EDIT MODAL ---
+    const handleEditClick = (entry) => {
+        setEditEntryId(entry.id);
+        setEditTitle(entry.title);
+        // React Quill seamlessly handles both older plain text and new HTML!
+        setEditContent(entry.content || ""); 
+        setShowEditModal(true);
+    };
+
+    // --- SAVE EDITS ---
+    const handleUpdateJournal = async () => {
+        if (!editTitle.trim()) return;
+        
+        try {
+            const response = await fetch(`http://localhost:5000/api/users/${user.uid}/journals/${editEntryId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title: editTitle, content: editContent })
+            });
+            
+            if (response.ok) {
+                setShowEditModal(false);
+                fetchJournals(); 
+            }
+        } catch (e) {
+            console.error("Error updating document: ", e);
         }
     };
 
@@ -96,12 +132,17 @@ function DashboardContent({ user }) {
                 <div style={{color: 'white', marginTop: '20px'}}>No journal entries yet. Start writing!</div>
             ) : (
                 journals.map(journal => (
-                    <JournalEntry key={journal.id} entry={journal} onDelete={handleDeleteJournal} />
+                    <JournalEntry 
+                        key={journal.id} 
+                        entry={journal} 
+                        onEdit={handleEditClick} 
+                        onDelete={handleDeleteJournal} 
+                    />
                 ))
             )}
 
-            {/* Modal for new entry */}
-            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+            {/* CREATE ENTRY MODAL */}
+            <Modal show={showModal} onHide={() => setShowModal(false)} centered size="lg">
                 <Modal.Header closeButton>
                     <Modal.Title>Dear Journal...</Modal.Title>
                 </Modal.Header>
@@ -111,13 +152,42 @@ function DashboardContent({ user }) {
                             <Form.Control type="text" placeholder="Entry Title" value={title} onChange={(e) => setTitle(e.target.value)} />
                         </Form.Group>
                         <Form.Group>
-                            <Form.Control as="textarea" rows={6} placeholder="Write your thoughts here..." value={content} onChange={(e) => setContent(e.target.value)} />
+                            <Form.Label>Content</Form.Label>
+                            {/* REACT QUILL EDITOR */}
+                            <div style={{ backgroundColor: 'white', color: 'black', borderRadius: '4px' }}>
+                                <ReactQuill theme="snow" value={content} onChange={setContent} style={{ height: '250px', marginBottom: '45px' }} />
+                            </div>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
                     <Button variant="primary" onClick={handleSaveJournal}>Save Entry</Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/* EDIT ENTRY MODAL */}
+            <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered size="lg">
+                <Modal.Header closeButton>
+                    <Modal.Title>Edit Journal Entry</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group className="mb-3">
+                            <Form.Control type="text" placeholder="Entry Title" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Content</Form.Label>
+                            {/* REACT QUILL EDITOR */}
+                            <div style={{ backgroundColor: 'white', color: 'black', borderRadius: '4px' }}>
+                                <ReactQuill theme="snow" value={editContent} onChange={setEditContent} style={{ height: '250px', marginBottom: '45px' }} />
+                            </div>
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowEditModal(false)}>Cancel</Button>
+                    <Button variant="primary" onClick={handleUpdateJournal}>Update Entry</Button>
                 </Modal.Footer>
             </Modal>
         </Container>

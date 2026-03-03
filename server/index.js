@@ -84,6 +84,24 @@ app.delete('/api/users/:uid/journals/:journalId', async (req, res) => {
     }
 });
 
+// PUT (Update) a journal
+app.put('/api/users/:uid/journals/:journalId', async (req, res) => {
+    try {
+        const { uid, journalId } = req.params;
+        const { title, content } = req.body;
+        
+        await db.collection('users').doc(uid).collection('journals').doc(journalId).update({
+            title,
+            content
+        });
+        
+        res.status(200).json({ message: "Journal updated successfully" });
+    } catch (error) {
+        console.error("Error updating journal:", error);
+        res.status(500).json({ error: "Failed to update journal" });
+    }
+});
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

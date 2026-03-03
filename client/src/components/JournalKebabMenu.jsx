@@ -17,7 +17,7 @@ const KebabToggle = React.forwardRef(({ children, onClick }, ref) => (
 ));
 
 // Kebab Menu component: accept the onDelete prop
-function KebabMenu({ onDelete }) {
+function KebabMenu({ onEdit, onDelete }) {
   return (
     <Dropdown>
       <Dropdown.Toggle as={KebabToggle} id="dropdown-kebab">
@@ -25,8 +25,8 @@ function KebabMenu({ onDelete }) {
       </Dropdown.Toggle>
 
       <Dropdown.Menu align="end">
-        <Dropdown.Item href="#/action-1">Edit</Dropdown.Item>
-        {/* Attach the onDelete prop to the Delete dropdown item */}
+        {/* Attach onEdit here */}
+        <Dropdown.Item onClick={onEdit}>Edit</Dropdown.Item>
         <Dropdown.Item onClick={onDelete} className="text-danger">Delete</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
