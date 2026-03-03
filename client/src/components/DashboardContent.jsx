@@ -11,7 +11,28 @@ function DashboardContent({ user }) {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
-    // 1. Fetch Journals from Express
+        // 1. Fetch User Profile (Username) from Express
+    useEffect(() => {
+        if (!user) return;
+        
+        const fetchUserProfile = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/api/users/${user.uid}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setUsername(data.username);
+                } else {
+                    console.error("Failed to fetch user data");
+                }
+            } catch (error) {
+                console.error("Error fetching profile", error);
+            }
+        };
+
+        fetchUserProfile();
+    }, [user]);
+
+    // 2. Fetch Journals from Express
     const fetchJournals = async () => {
         if (!user) return;
         try {
@@ -27,7 +48,7 @@ function DashboardContent({ user }) {
         fetchJournals();
     }, [user]);
 
-    // 2. Save a new Journal via Express
+    // 3. Save a new Journal via Express
     const handleSaveJournal = async () => {
         if (!title.trim() || !content.trim()) return;
         try {
@@ -48,7 +69,7 @@ function DashboardContent({ user }) {
         }
     };
 
-    // 3. Delete a Journal via Express
+    // 4. Delete a Journal via Express
     const handleDeleteJournal = async (journalId) => {
         try {
             const response = await fetch(`http://localhost:5000/api/users/${user.uid}/journals/${journalId}`, {

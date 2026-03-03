@@ -1,24 +1,54 @@
-import { Dropdown, Image } from 'react-bootstrap';
-import '../styles/ProfileButton.css';
+import React from 'react';
+import { Dropdown } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+
+// Firebase imports
+import { getAuth, signOut } from 'firebase/auth';
 
 function ProfileButton() {
-  return (
-    <Dropdown align="end">
-      <Dropdown.Toggle
-            variant="light"
-            className="rounded-circle p-0 d-flex align-items-center justify-content-center"
-            style={{ width: "40px", height: "40px" }}
-        >
-            👤
-        </Dropdown.Toggle>
+  const navigate = useNavigate();
 
-      <Dropdown.Menu>
-        <Dropdown.Item>Profile Settings</Dropdown.Item>
-        <Dropdown.Item>Trash</Dropdown.Item>
-        <Dropdown.Item>Logout</Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
+  const handleLogout = async () => {
+    try {
+      // Get the auth instance and sign the user out
+      const auth = getAuth();
+      await signOut(auth);
+      // Redirects back to the login page
+      navigate('/login');
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
+  return (
+    <>
+      <style>
+        {`
+          .dropdown-toggle::after {
+            display: none !important;
+          }
+        `}
+      </style>
+      <Dropdown align="end">
+        <Dropdown.Toggle
+              variant="light"
+              className="rounded-circle p-0 d-flex align-items-center justify-content-center"
+              style={{ width: "40px", height: "40px" }}
+          >
+              👤
+          </Dropdown.Toggle>
+
+        <Dropdown.Menu>
+          <Dropdown.Item>Profile Settings</Dropdown.Item>
+          <Dropdown.Item>Trash</Dropdown.Item>
+          {/* Attach the logout function to the onClick event */}
+          <Dropdown.Item onClick={handleLogout} className="text-danger">
+              Logout
+          </Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+    </>
   );
 }
 
-export default ProfileButton
+export default ProfileButton;

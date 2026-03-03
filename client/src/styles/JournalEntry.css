@@ -24,3 +24,20 @@
   -webkit-line-clamp: 3; 
   line-clamp: 3;
 }
+
+.journal-entry {
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.journal-entry .row{
+    box-shadow: 1px 1px 15px #000000;
+}
+
+.journal-entry:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+#journal-content{
+    color: black;
+}

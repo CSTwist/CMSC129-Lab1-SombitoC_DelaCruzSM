@@ -10,7 +10,7 @@ const KebabToggle = React.forwardRef(({ children, onClick }, ref) => (
       e.preventDefault();
       onClick(e);
     }}
-    style={{ cursor: 'pointer', textDecoration: 'none', color: 'white' }}
+    style={{ cursor: 'pointer', textDecoration: 'none', color: 'black' }}
   >
     {children}
   </a>
