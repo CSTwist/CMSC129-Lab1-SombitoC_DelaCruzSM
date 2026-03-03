@@ -20,7 +20,7 @@ function JournalEntry({ entry, onDelete }) {
                         <small>{dateStr}</small>
                         <br />
                         <span className='journal-title'>{entry.title}</span>
-                        <p>{entry.content}</p>
+                        <p id="journal-summary">{entry.content}</p>
                     </div> 
                 </Col>
                 <Col xs="auto">
