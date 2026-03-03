@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Container, Modal, Button, Form } from 'react-bootstrap';
 import '../styles/DashboardContent.css';
 import JournalEntry from '../components/JournalEntry.jsx';
@@ -11,16 +12,14 @@ function DashboardContent({ user }) {
     const [journals, setJournals] = useState([]);
     const [username, setUsername] = useState("");
     
-    // --- CREATE STATE ---
-    const [showModal, setShowModal] = useState(false);
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
 
     // --- EDIT STATE ---
     const [showEditModal, setShowEditModal] = useState(false);
     const [editEntryId, setEditEntryId] = useState(null);
     const [editTitle, setEditTitle] = useState("");
     const [editContent, setEditContent] = useState("");
+
+    const navigate = useNavigate();
 
     // 1. Fetch User Profile
     useEffect(() => {
@@ -124,8 +123,11 @@ function DashboardContent({ user }) {
         <Container className="dashboard-content d-flex flex-column align-items-center min-vh-100">
             <p id="dashboard-greetings">How was your day, {username || 'friend'}?</p>
             
-            <button className="add-journal btn btn-primary d-flex align-items-center justify-content-center gap-2 rounded-4" onClick={() => setShowModal(true)}>
-                <i className="bi bi-plus-square"></i> New entry
+            <button
+            className="add-journal btn btn-primary d-flex align-items-center justify-content-center gap-2 rounded-4"
+            onClick={() => navigate('/add-journal')}
+            >
+            <i className="bi bi-plus-square"></i> New entry
             </button>
 
             {journals.length === 0 ? (
@@ -140,31 +142,6 @@ function DashboardContent({ user }) {
                     />
                 ))
             )}
-
-            {/* CREATE ENTRY MODAL */}
-            <Modal show={showModal} onHide={() => setShowModal(false)} centered size="lg">
-                <Modal.Header closeButton>
-                    <Modal.Title>Dear Journal...</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
-                        <Form.Group className="mb-3">
-                            <Form.Control type="text" placeholder="Entry Title" value={title} onChange={(e) => setTitle(e.target.value)} />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Content</Form.Label>
-                            {/* REACT QUILL EDITOR */}
-                            <div style={{ backgroundColor: 'white', color: 'black', borderRadius: '4px' }}>
-                                <ReactQuill theme="snow" value={content} onChange={setContent} style={{ height: '250px', marginBottom: '45px' }} />
-                            </div>
-                        </Form.Group>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
-                    <Button variant="primary" onClick={handleSaveJournal}>Save Entry</Button>
-                </Modal.Footer>
-            </Modal>
 
             {/* EDIT ENTRY MODAL */}
             <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered size="lg">
