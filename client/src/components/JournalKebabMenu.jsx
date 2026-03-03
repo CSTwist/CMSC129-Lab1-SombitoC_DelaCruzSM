@@ -10,25 +10,24 @@ const KebabToggle = React.forwardRef(({ children, onClick }, ref) => (
       e.preventDefault();
       onClick(e);
     }}
-    // Add some basic styling for the three dots
     style={{ cursor: 'pointer', textDecoration: 'none', color: 'white' }}
   >
     {children}
   </a>
 ));
 
-// Kebab Menu component
-function KebabMenu() {
+// Kebab Menu component: accept the onDelete prop
+function KebabMenu({ onDelete }) {
   return (
     <Dropdown>
-      {/* Using the vertical ellipsis character as the icon */}
       <Dropdown.Toggle as={KebabToggle} id="dropdown-kebab">
-        &#x22EE; {/* Vertical ellipsis character */}
+        &#x22EE;
       </Dropdown.Toggle>
 
-      <Dropdown.Menu align="end"> {/* Align right for better positioning */}
+      <Dropdown.Menu align="end">
         <Dropdown.Item href="#/action-1">Edit</Dropdown.Item>
-        <Dropdown.Item href="#/action-2">Delete</Dropdown.Item>
+        {/* Attach the onDelete prop to the Delete dropdown item */}
+        <Dropdown.Item onClick={onDelete} className="text-danger">Delete</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );

@@ -1,31 +1,35 @@
-import { Button, Form, Container, Row, Col, Alert } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import '../styles/JournalEntry.css';
 import KebabMenu from '../components/JournalKebabMenu.jsx';
 import journalImg from '../assets/journal.png';
 
-function JournalEntry(){
+function JournalEntry({ entry, onDelete }) {
+    // Convert timestamp to readable date
+    const dateStr = new Date(entry.createdAt).toLocaleDateString(undefined, { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+
     return (
         <Container className='journal-entry'>
             <Row>
                 <img id="journal-image" src={journalImg} alt="Journal" />
-
                 <Col>
-                {/* Replace this with dynamic journal summary*/}
                     <div className='journal-summary-content'>
-                        MM/DD/YYYY
+                        <small>{dateStr}</small>
                         <br />
-                        <span className='journal-title'>Lorem ipsum dolor set</span>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                        <span className='journal-title'>{entry.title}</span>
+                        <p>{entry.content}</p>
                     </div> 
                 </Col>
-
                 <Col xs="auto">
-                    <KebabMenu />
+                    {/* Pass the entry ID to the menu to delete it */}
+                    <KebabMenu onDelete={() => onDelete(entry.id)} />
                 </Col>
             </Row>
-
         </Container>
     );
 }
 
-export default JournalEntry
+export default JournalEntry;

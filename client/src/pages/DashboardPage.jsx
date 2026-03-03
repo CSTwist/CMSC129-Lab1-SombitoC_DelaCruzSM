@@ -2,12 +2,12 @@ import React from 'react';
 import Header from '../components/Header.jsx';
 import DashboardContent from '../components/DashboardContent.jsx';
 
-function DashboardPage() {
+function DashboardPage({ user }) {
 
         return (
             <div className='dashboard-container'>
                 <Header />
-                <DashboardContent/>
+                <DashboardContent user={user} />
             </div>
         )
 }
