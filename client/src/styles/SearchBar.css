@@ -19,3 +19,13 @@
     align-items: flex-start;
     gap: 10px;
 }
+
+.search-input-field, .search-icon-wrapper{
+  background-color: var(--paleoak) !important;
+  border: none;
+  opacity: 0.7;
+}
+
+.search-input input{
+  margin-bottom: 0;
+}

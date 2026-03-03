@@ -1,0 +1,18 @@
+.journal-entry{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+#journal-image{
+    max-width: 10%;
+    max-height: 10%;
+}
+
+.journal-title{
+    font-size: xx-large;
+    font-weight: bold;
+}
+
+.journal-summary-content{   
+    color: white;
+}
