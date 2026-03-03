@@ -8,7 +8,7 @@ import JournalEntry from '../components/JournalEntry.jsx';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // Standard rich text theme
 
-function DashboardContent({ user }) {
+function DashboardContent({ user, searchQuery }) {
     const [journals, setJournals] = useState([]);
     const [username, setUsername] = useState("");
     
@@ -20,6 +20,19 @@ function DashboardContent({ user }) {
     const [editContent, setEditContent] = useState("");
 
     const navigate = useNavigate();
+
+    // Filter the journals based on the search query
+    const filteredJournals = journals.filter((journal) => {
+        if (!searchQuery) return true; // Show all if query is empty
+        
+        const lowerCaseQuery = searchQuery.toLowerCase();
+        const plainTextContent = (journal.content || "").replace(/<[^>]+>/g, '').toLowerCase(); // Strip HTML tags for searching
+        
+        return (
+            (journal.title && journal.title.toLowerCase().includes(lowerCaseQuery)) ||
+            plainTextContent.includes(lowerCaseQuery)
+        );
+    });
 
     // 1. Fetch User Profile
     useEffect(() => {
@@ -130,10 +143,12 @@ function DashboardContent({ user }) {
             <i className="bi bi-plus-square"></i> New entry
             </button>
 
-            {journals.length === 0 ? (
-                <div style={{color: 'white', marginTop: '20px'}}>No journal entries yet. Start writing!</div>
+            {filteredJournals.length === 0 ? (
+                <div style={{color: 'white', marginTop: '20px'}}>
+                    {journals.length === 0 ? "No journal entries yet. Start writing!" : "No journal entries match your search."}
+                </div>
             ) : (
-                journals.map(journal => (
+                filteredJournals.map(journal => (
                     <JournalEntry 
                         key={journal.id} 
                         entry={journal} 

@@ -7,18 +7,17 @@ import '../styles/SearchBar.css';
 function SearchBar({ onSearch }) {
     const [query, setSearch] = useState("");
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleChange = (e) => {
+        const value = e.target.value;
+        setSearch(value);
 
         if (onSearch) {
-            onSearch(query);
+            onSearch(value); // trigger search immediately
         }
-
-        console.log("Searching for entry:", query);
-    }
+    };
 
     return (
-        <Form onSubmit={handleSubmit} className="search-bar d-flex align-items-center">
+        <Form className="search-bar d-flex align-items-center">
             <InputGroup className='search-input'>
                 <InputGroup.Text className='search-icon-wrapper'>
                     <BsSearch className='search-icon' />
@@ -29,13 +28,11 @@ function SearchBar({ onSearch }) {
                     type="text"
                     placeholder="Search entries..."
                     value={query}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={handleChange}
                 />
-
             </InputGroup>
-
         </Form>
     )
 }
 
-export default SearchBar
+export default SearchBar;
