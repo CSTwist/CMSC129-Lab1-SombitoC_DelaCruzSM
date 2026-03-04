@@ -1,3 +1,9 @@
+/**** JOURNAL ENTRY CSS ****/
+
+body {
+    background-color: var(--copper);
+}
+
 .journal-entry{
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -8,11 +14,21 @@
 }
 
 .journal-title{
-    font-size: xx-large;
+    font-size: 2.5rem;
     font-weight: bold;
+    font-style: italic;
+    font-family: "IM FELL DW Pica", serif;
+}
+
+.date {
+    font-size: 12px;
+    color: white;
+    opacity: 0.9;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .journal-summary-content{   
+    margin: 0.5rem;
     color: white;
 }
 
@@ -33,7 +49,10 @@
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 .journal-entry .row{
-    box-shadow: 1px 1px 15px #000000;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.60);
+    padding: 0.9rem;
+    border-radius: 15px !important;
+    overflow: hidden;
 }
 
 .journal-entry:hover {
@@ -46,5 +65,167 @@
 }
 
 .ql-editor > *{
-    color: black;
+    color: #442c1b !important;
+    font-size: 17px;
 }
+
+/* Change the background of the entire Quill container */
+.ql-container.ql-snow {
+    background-color: var(--tan) !important; 
+    border: none !important;
+    border-radius: 0 0 12px 12px;
+}
+
+/* Change the background of the toolbar */
+.ql-toolbar.ql-snow {
+    background-color: var(--paleoak) !important; 
+    border: none !important;
+    border-radius: 12px 12px 0 0;
+}
+
+/* Ensure the text inside the editor is readable */
+.ql-editor {
+    color: var(--coffee) !important;
+    min-height: 200px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.ql-snow .ql-stroke {
+    stroke: var(--coffee) !important;
+}
+.ql-snow .ql-fill {
+    fill: var(--coffee) !important;
+}
+
+.modal-content {
+    background-color: var(--cream) !important;
+    color: var(--coffee) !important;
+    border-radius: 15px !important;
+    border: none !important;
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--toffee-brown) !important;
+    padding: 0.5rem 1.5rem !important;
+    background-color: var(--tan);
+}
+
+.modal-title {
+    color: var(--coffee) !important;
+    font-family: "IM FELL DW Pica", serif;
+    font-style: italic;
+    font-size: 2rem !important;
+}
+
+.modal-body {
+    background-color: var(--paleoak);
+    border-radius: 10px;
+}
+
+#journal-content {
+    color: var(--coffee) !important;
+    background-color: transparent; 
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.6;
+    padding: 0.5rem;
+    border-radius: 10px;
+    min-height: 200px;
+}
+
+.add-journal-wrapper {
+    background-color: var(--copper); /* Matches your body background */
+}
+
+.journal-form-container {
+    background-color: var(--cream); /* Replaces the white modal-like background */
+}
+
+.journal-page-header {
+    color: var(--coffee);
+    font-family: "IM FELL DW Pica", serif;
+    font-style: italic;
+}
+
+.theme-label {
+    color: var(--coffee);
+    font-weight: 600;
+}
+
+.custom-theme-input.form-control {
+    background-color: var(--tan) !important; 
+    border: 1px solid var(--toffee-brown);
+    color: var(--coffee) !important;
+    font-weight: 500;
+
+}
+
+.save-entry-btn {
+    background-color: var(--coffee) !important;
+    border: none !important;
+    color: var(--cream) !important;
+}
+
+.save-entry-btn:hover {
+    background-color: var(--toffee-brown) !important;
+}
+
+/* --- Quill Editor Theming --- */
+.quill-theme-container .ql-container.ql-snow {
+    background-color: var(--tan) !important; 
+    border: 1px solid var(--toffee-brown) !important;
+    border-radius: 0 0 12px 12px;
+}
+
+.quill-theme-container .ql-toolbar.ql-snow {
+    background-color: var(--paleoak) !important; 
+    border: 1px solid var(--toffee-brown) !important;
+    border-radius: 12px 12px 0 0;
+}
+
+.quill-theme-container .ql-editor {
+    color: var(--coffee) !important; 
+    font-size: 0.9rem;
+}
+
+.journal-entry {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* React Quill placeholder */
+.ql-editor.ql-blank::before {
+    color: var(--toffee-brown) !important;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/**** Trash Page Buttons CSS ****/
+.trash-buttons {
+    margin: 0.5rem;
+}
+
+.restore-btn {
+    background-color: var(--coffee) !important;
+    border: none !important;
+    color: var(--cream) !important;
+}
+
+.restore-btn:hover {
+    background-color: var(--toffee-brown) !important;
+}
+
+.delete-btn {
+    background-color: #ee3239 !important;
+    border: none !important;
+    color: var(--cream) !important;
+}
+
+.delete-btn:hover {
+    background-color: #ef484d !important;
+    color: var(--cream) !important; 
+}
+

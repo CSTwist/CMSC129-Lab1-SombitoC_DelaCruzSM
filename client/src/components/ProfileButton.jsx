@@ -40,8 +40,10 @@ function ProfileButton() {
 
         <Dropdown.Menu>
           <Dropdown.Item>Profile Settings</Dropdown.Item>
-          <Dropdown.Item>Trash</Dropdown.Item>
-          {/* Attach the logout function to the onClick event */}
+          <Dropdown.Item onClick={() => navigate('/trash')}>
+            Trash
+          </Dropdown.Item>
+          
           <Dropdown.Item onClick={handleLogout} className="text-danger">
               Logout
           </Dropdown.Item>

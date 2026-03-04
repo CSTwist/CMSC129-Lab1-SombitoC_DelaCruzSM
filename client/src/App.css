@@ -1,3 +1,30 @@
+/* =========================================
+   CUSTOM SCROLLBAR
+   ========================================= */
+
+/* Width of the entire scrollbar */
+::-webkit-scrollbar {
+  width: 14px;
+}
+
+/* The track (background) of the scrollbar */
+::-webkit-scrollbar-track {
+  background: var(--cream, #EDE0D4); 
+}
+
+/* The draggable thumb */
+::-webkit-scrollbar-thumb {
+  background-color: var(--copper, #B08968);
+  border-radius: 10px;
+  /* Adding a border matching the track color creates a nice padded "floating" effect */
+  border: 3px solid var(--cream, #EDE0D4); 
+}
+
+/* Hover effect for the draggable thumb */
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--toffee-brown, #9C6644);
+}
+
 /* #root {
   max-width: 1280px;
   margin: 0 auto;
