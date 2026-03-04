@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica:ital@0;1&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* APP COLORS */
+:root {
+  --coffee: #7F5539;
+  --toffee-brown: #9C6644;
+  --copper: #B08968;
+  --tan: #DDB892;
+  --paleoak: #E6CCB2;
+  --cream: #EDE0D4;
+}
+
+.dashboard-content{
+    background-color: var(--copper);
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    min-width: 100%;
+}
+
+#dashboard-greetings{
+    font-family: '"IM FELL Double Pica", serif';
+    font-style: italic;
+    font-size: xx-large;
+    margin-top: 0.5rem;
+    font-weight: bold;
+}
+
+.add-journal{
+    width: 90%;
+    padding: 3% 0px;
+    font-size: larger;
+    margin-bottom: 1rem;
+}
+
+.add-journal.btn-primary{
+    --bs-btn-color: black;
+    --bs-btn-bg: var(--cream);
+    --bs-btn-hover-color: black;
+    --bs-btn-hover-bg: var(--paleoak);
+    --bs-btn-border-color: none;
+    --bs-btn-active-bg: var(--tan);
+    --bs-btn-active-color: black;
+}

@@ -50,7 +50,7 @@ p {
     border-radius: 50px;
 }
 
-.title-header {
+.auth-title-header {
     display: flex;
     width: 174px;
     height: 72px;
@@ -145,7 +145,7 @@ body {
 }
 
 .forgot-psd {
-    color: #294DD1;
+    color: #9C6644;
     text-align: center;
     font-family: Montserrat;
     font-size: 13px;
@@ -157,6 +157,7 @@ body {
 
 .forgot-psd:hover,
 .auth-link {
+    color: #9C6644;
     text-decoration: underline;
     cursor: pointer;
 }

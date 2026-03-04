@@ -1,0 +1,50 @@
+.journal-entry{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+#journal-image{
+    width: 130px;
+}
+
+.journal-title{
+    font-size: xx-large;
+    font-weight: bold;
+}
+
+.journal-summary-content{   
+    color: white;
+}
+
+#journal-summary {
+  overflow: hidden;
+  display: -webkit-box; 
+  -webkit-box-orient: vertical; 
+  -webkit-line-clamp: 3; 
+  line-clamp: 3;
+}
+
+#journal-summary p{
+    color: white !important;
+}
+
+.journal-entry {
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.journal-entry .row{
+    box-shadow: 1px 1px 15px #000000;
+}
+
+.journal-entry:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+#journal-content p{
+    color: black;
+}
+
+.ql-editor > *{
+    color: black;
+}
