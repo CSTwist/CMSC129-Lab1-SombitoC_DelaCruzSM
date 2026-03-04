@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import AddJournalPage from './pages/AddJournal.jsx';
+import TrashPage from './pages/TrashPage.jsx';
 
 // Firebase imports
 import { onAuthStateChanged } from 'firebase/auth';
@@ -35,6 +36,7 @@ function App() {
         <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/dashboard" />} />
         <Route path="/signup" element={!user ? <SignupPage /> : <Navigate to="/dashboard" />} />
         <Route path="/add-journal" element={<AddJournalPage user={user} />} />
+        <Route path="/trash" element={<TrashPage user={user} />} />
 
         {/* Protect the dashboard route */}
         <Route path="/dashboard" element={user ? <DashboardPage user={user} /> : <Navigate to="/login" />} />

@@ -1,3 +1,5 @@
+/**** DASHBOARD CONTENT CSS ****/
+
 @import url('https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica:ital@0;1&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 /* APP COLORS */
@@ -18,26 +20,27 @@
 }
 
 #dashboard-greetings{
-    font-family: '"IM FELL Double Pica", serif';
+    font-family: "IM FELL DW Pica", serif;
     font-style: italic;
-    font-size: xx-large;
+    font-size: 35px;
     margin-top: 0.5rem;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 .add-journal{
-    width: 90%;
+    width: 80%;
     padding: 3% 0px;
     font-size: larger;
     margin-bottom: 1rem;
 }
 
 .add-journal.btn-primary{
-    --bs-btn-color: black;
+    --bs-btn-color: #51331f;
     --bs-btn-bg: var(--cream);
-    --bs-btn-hover-color: black;
+    --bs-btn-hover-color: #51331f;
     --bs-btn-hover-bg: var(--paleoak);
     --bs-btn-border-color: none;
     --bs-btn-active-bg: var(--tan);
-    --bs-btn-active-color: black;
+    --bs-btn-active-color: #51331f;
 }
+

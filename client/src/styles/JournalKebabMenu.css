@@ -1,0 +1,12 @@
+.kebab-toggle {
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+    padding: 0 5px;
+}
+
+.kebab-coffee .kebab-toggle {
+    color: var(--coffee) !important;
+}

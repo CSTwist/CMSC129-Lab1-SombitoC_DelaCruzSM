@@ -33,12 +33,13 @@ function AddJournalPage({ user }) {
     return (
         <div className="dashboard-container">
             <Header />
-            <Container className="mt-4">
-                <h2 style={{ color: 'white' }}>Dear Journal...</h2>
+            <Container className="mt-4 p-4 rounded-4 shadow-lg journal-form-container">
+                <h2 className="journal-page-header">Dear Journal...</h2>
 
                 <Form>
                     <Form.Group className="mb-3">
                         <Form.Control
+                            className='journal-title-input custom-theme-input'
                             type="text"
                             placeholder="Entry Title"
                             value={title}
@@ -47,22 +48,23 @@ function AddJournalPage({ user }) {
                     </Form.Group>
 
                     <Form.Group>
-                        <Form.Label style={{ color: 'white' }}>Content</Form.Label>
-                        <div style={{ backgroundColor: 'white', borderRadius: '4px' }}>
+                        <Form.Label className="theme-label">Content</Form.Label>
+                        <div className="quill-theme-container">
                             <ReactQuill
                                 theme="snow"
                                 value={content}
                                 onChange={setContent}
+                                placeholder='Start writing here...'
                                 style={{ height: '250px', marginBottom: '45px' }}
                             />
                         </div>
                     </Form.Group>
 
-                    <div className="mt-3">
-                        <Button variant="secondary" onClick={() => navigate('/dashboard')} className="me-2">
+                    <div className="mt-3 d-flex justify-content-end gap-2">
+                        <Button variant="secondary" onClick={() => navigate('/dashboard')} className="px-4">
                             Cancel
                         </Button>
-                        <Button variant="primary" onClick={handleSaveJournal}>
+                        <Button variant="primary" className='save-entry-btn px-4' onClick={handleSaveJournal}>
                             Save Entry
                         </Button>
                     </div>

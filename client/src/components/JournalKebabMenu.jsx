@@ -1,5 +1,6 @@
 import React from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
+import '../styles/JournalKebabMenu.css';
 
 // Custom Kebab Toggle component
 const KebabToggle = React.forwardRef(({ children, onClick }, ref) => (
@@ -10,7 +11,7 @@ const KebabToggle = React.forwardRef(({ children, onClick }, ref) => (
       e.preventDefault();
       onClick(e);
     }}
-    style={{ cursor: 'pointer', textDecoration: 'none', color: 'black' }}
+    className="kebab-toggle"
   >
     {children}
   </a>
@@ -25,7 +26,6 @@ function KebabMenu({ onEdit, onDelete }) {
       </Dropdown.Toggle>
 
       <Dropdown.Menu align="end">
-        {/* Attach onEdit here */}
         <Dropdown.Item onClick={onEdit}>Edit</Dropdown.Item>
         <Dropdown.Item onClick={onDelete} className="text-danger">Delete</Dropdown.Item>
       </Dropdown.Menu>

@@ -58,7 +58,7 @@ p {
     justify-content: center;
     color: var(--coffee);
     text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    font-family: "IM FELL Double Pica", serif;
+    font-family: "IM FELL DW Pica", serif;
     font-size: 28px;
     font-style: italic;
     font-weight: 500;
@@ -83,7 +83,7 @@ body {
     flex-direction: column;
     justify-content: center;
     color: var(--coffee);
-    font-family: "IM FELL Double Pica";
+    font-family: "IM FELL DW Pica";
     font-size: 38px;
     font-style: italic;
     font-weight: 500;
@@ -138,8 +138,15 @@ body {
 .auth-btn:focus, 
 .auth-btn:active, 
 .auth-btn:focus-visible,
-.btn-primary.auth-btn:active:focus {
+.btn-primary.auth-btn:hover,
+.btn-primary.auth-btn:focus, 
+.btn-primary.auth-btn:active, 
+.btn-primary.auth-btn:active:focus,
+.btn-primary.auth-btn:active:hover,
+.btn-primary.auth-btn:focus-visible {
     background-color: var(--coffee) !important; 
+    border-color: var(--coffee) !important;
+    color: white !important;
     box-shadow: 0 0 0 0.25rem rgba(183, 122, 84, 0.9) !important; 
     cursor: pointer;
 }
@@ -160,4 +167,17 @@ body {
     color: #9C6644;
     text-decoration: underline;
     cursor: pointer;
+}
+
+.auth-form .form-control:-webkit-autofill,
+.auth-form .form-control:-webkit-autofill:hover, 
+.auth-form .form-control:-webkit-autofill:focus, 
+.auth-form .form-control:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px var(--tan) inset !important;
+    -webkit-text-fill-color: var(--coffee) !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.auth-form .form-control:-webkit-autofill:focus {
+    box-shadow: 0 0 0 2px rgba(156, 102, 68, 0.6), 0 0 0 30px var(--tan) inset !important;
 }

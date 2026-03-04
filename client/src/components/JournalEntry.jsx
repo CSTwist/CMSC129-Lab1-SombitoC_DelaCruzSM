@@ -1,22 +1,22 @@
 import { useState } from 'react';
-import { Container, Row, Col, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Modal, Button } from 'react-bootstrap';
 import '../styles/JournalEntry.css';
 import KebabMenu from '../components/JournalKebabMenu.jsx';
 import journalImg from '../assets/journal.png';
 
-function JournalEntry({ entry, onDelete, onEdit }) { // <-- Added onEdit here
+function JournalEntry({ entry, onDelete, onEdit, isTrash, onRestore, onPermanentDelete }) { 
     const [showModal, setShowModal] = useState(false);
 
     const handleOpen = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
 
-    const dateStr = new Date(entry.createdAt).toLocaleDateString(undefined, { 
+    const dateStr = entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('en-US', { 
         year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-    });
+        month: '2-digit', 
+        day: '2-digit' 
+    })
+    : "MM/DD/YYYY";
 
-    // Helper: Prevent raw Yoopta JSON from showing up on the screen 
     const isRichText = typeof entry.content === 'string' && entry.content.includes('"id"');
     const displayContent = isRichText ? "[Rich text content]" : entry.content;
 
@@ -35,7 +35,7 @@ function JournalEntry({ entry, onDelete, onEdit }) { // <-- Added onEdit here
 
                     <Col>
                         <div className='journal-summary-content'>
-                            <small>{dateStr}</small>
+                            <small className="date">{dateStr}</small>
                             <br />
                             <span className='journal-title'>{entry.title}</span>
                             <div 
@@ -46,11 +46,18 @@ function JournalEntry({ entry, onDelete, onEdit }) { // <-- Added onEdit here
                     </Col>
 
                     <Col xs="auto" onClick={(e) => e.stopPropagation()}>
-                        <KebabMenu 
-                            onEdit={() => onEdit(entry)} 
-                            onDelete={() => onDelete(entry.id)} 
-                        />
-                    </Col>
+                        {isTrash ? (
+                            <div className="trash-buttons d-flex gap-2">
+                                <Button className='restore-btn' variant="outline-success" size="sm" onClick={() => onRestore(entry.id)}>Restore</Button>
+                                <Button  className='delete-btn' variant="outline-danger" size="sm" onClick={() => onPermanentDelete(entry.id)}>Delete Forever</Button>
+                            </div>
+                        ) : (
+                            <KebabMenu 
+                                onEdit={() => onEdit(entry)} 
+                                onDelete={() => onDelete(entry.id)} 
+                            />
+                        )}
+                        </Col>
                 </Row>
             </Container>
 
@@ -60,15 +67,19 @@ function JournalEntry({ entry, onDelete, onEdit }) { // <-- Added onEdit here
                         <Modal.Title>{entry.title}</Modal.Title>
 
                         <div onClick={(e) => e.stopPropagation()}>
-                            {/* Passed onEdit down, and closed the view modal before opening the edit modal */}
-                            <KebabMenu 
-                                id="kebab-menu-view" 
-                                onEdit={() => {
-                                    handleClose();
-                                    onEdit(entry);
-                                }}
-                                onDelete={() => onDelete(entry.id)} 
-                            />
+                            {/* Kebab menu will not show in Trash page */}
+                            {!isTrash && (
+                                <div className="kebab-coffee"> {/* Wrapper to target this specific menu */}
+                                    <KebabMenu 
+                                        id="kebab-menu-view" 
+                                        onEdit={() => {
+                                            handleClose();
+                                            onEdit(entry);
+                                        }}
+                                        onDelete={() => onDelete(entry.id)} 
+                                    />
+                                </div>
+                            )}
                         </div>
                     </div>
                 </Modal.Header>

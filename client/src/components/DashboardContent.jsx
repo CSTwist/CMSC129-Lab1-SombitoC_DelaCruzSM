@@ -51,15 +51,22 @@ function DashboardContent({ user, searchQuery }) {
         fetchUserProfile();
     }, [user]);
 
-    // 2. Fetch Journals
     const fetchJournals = async () => {
         if (!user) return;
         try {
             const response = await fetch(`http://localhost:5000/api/users/${user.uid}/journals`);
             const data = await response.json();
-            setJournals(data);
+            
+            // --- ADD THIS CHECK ---
+            if (response.ok && Array.isArray(data)) {
+                setJournals(data);
+            } else {
+                console.error("Backend error or invalid data format:", data);
+                setJournals([]); // Fallback to empty array to prevent crashing
+            }
         } catch (error) {
             console.error("Error fetching journals", error);
+            setJournals([]); // Fallback to empty array on network error
         }
     };
 
