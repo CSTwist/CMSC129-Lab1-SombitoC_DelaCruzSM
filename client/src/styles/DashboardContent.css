@@ -25,6 +25,7 @@
     font-size: 35px;
     margin-top: 0.5rem;
     font-weight: 500;
+    color: white;
 }
 
 .add-journal{
@@ -42,5 +43,6 @@
     --bs-btn-border-color: none;
     --bs-btn-active-bg: var(--tan);
     --bs-btn-active-color: #51331f;
+    font-family: "Montserrat", sans-serif;
 }
 

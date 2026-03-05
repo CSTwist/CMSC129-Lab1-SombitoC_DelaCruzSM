@@ -173,7 +173,7 @@ function DashboardContent({ user, searchQuery }) {
                 <Modal.Body>
                     <Form>
                         <Form.Group className="mb-3">
-                            <Form.Control type="text" placeholder="Entry Title" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
+                            <Form.Control className="edit-form-control" type="text" placeholder="Entry Title" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Content</Form.Label>
