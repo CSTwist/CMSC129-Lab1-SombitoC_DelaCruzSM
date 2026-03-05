@@ -40,6 +40,25 @@ app.get('/api/users/:uid', async (req, res) => {
     }
 });
 
+// Update user profile data (Username and Email)
+app.put('/api/users/:uid/profile', async (req, res) => {
+    try {
+        const { uid } = req.params;
+        const { username, email } = req.body;
+        
+        const updateData = { updatedAt: Date.now() };
+        if (username !== undefined) updateData.username = username;
+        if (email !== undefined) updateData.email = email;
+        
+        await db.collection('users').doc(uid).update(updateData);
+
+        res.status(200).json({ message: "Profile updated successfully" });
+    } catch (error) {
+        console.error("Error updating profile:", error);
+        res.status(500).json({ error: "Failed to update profile" });
+    }
+});
+
 // --- JOURNAL ROUTES (ACTIVE ENTRIES) ---
 
 app.get('/api/users/:uid/journals', async (req, res) => {
@@ -192,6 +211,9 @@ app.delete('/api/users/:uid/trash/empty', async (req, res) => {
         res.status(500).json({ error: "Failed to empty trash" });
     }
 });
+
+// --- PROFILE UPDATE ROUTE ---
+
 
 // Start the server
 const PORT = process.env.PORT || 5000;

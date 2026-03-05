@@ -56,16 +56,16 @@ function AuthForm({ form }) {
         <Container fluid className="auth-container vh-100">
             <Row className="h-100 m-0">
                 <Col md={6} className="bg-image d-none d-md-block p-0"> </Col>
-                <Col xs={12} md={6} className="d-flex align-items-center justify-content-center">
+                <Col xs={12} md={6} className="auth-form-panel d-flex align-items-center justify-content-center">
                     <div className="auth-content-wrapper p-0 w-100">
-                        <div className='d-flex align-items-center mb-4'>
+                        <div className='auth-right d-flex align-items-center mb-4'>
                             <div className='logo me-2'> </div>
                             <h1 className='auth-title-header m-0'>The Journal</h1>
                         </div>
 
                         <Form onSubmit={handleSubmit} className="auth-form">
                             <h2 className="auth-header mb-0">{form === "login" ? "Welcome back!" : "Create an account"}</h2>
-                            <p className="subtitle mb-4">{form === "login" ? "Let's get you signed in." : 'Start your journaling journey.'}</p>
+                            <p className="auth-subtitle mb-4">{form === "login" ? "Let's get you signed in." : 'Start your journaling journey.'}</p>
 
                             {error && <Alert variant="danger">{error}</Alert>}
 

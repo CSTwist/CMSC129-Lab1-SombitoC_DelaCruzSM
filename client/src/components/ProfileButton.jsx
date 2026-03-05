@@ -39,7 +39,10 @@ function ProfileButton() {
           </Dropdown.Toggle>
 
         <Dropdown.Menu>
-          <Dropdown.Item>Profile Settings</Dropdown.Item>
+          <Dropdown.Item onClick={() => navigate('/profile-settings')}>
+            Profile Settings
+          </Dropdown.Item>
+          
           <Dropdown.Item onClick={() => navigate('/trash')}>
             Trash
           </Dropdown.Item>

@@ -1,0 +1,112 @@
+/***** PROFILE PAGE CSS *****/
+
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica:ital@0;1&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  --coffee: #7F5539;
+  --toffee-brown: #9C6644;
+  --copper: #B08968;
+  --tan: #DDB892;
+  --paleoak: #E6CCB2;
+  --cream: #EDE0D4;
+}
+
+.profile-page-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--copper); 
+}
+
+.profile-page-content {
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1rem;
+}
+
+.profile-page-header {
+    color: var(--coffee) !important;
+    font-family: "IM FELL DW Pica", serif !important;
+    font-size: 2.5rem !important;
+    font-style: italic !important;
+    font-weight: bold !important;
+    margin-bottom: 1.5rem !important;
+    text-align: left; 
+}
+
+.profile-form-container {
+    width: 100%;
+    max-width: 600px;
+    background-color: var(--cream);
+    border-radius: 15px;
+    padding: 2.5rem;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.60); 
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Custom form labels */
+.profile-theme-label {
+    color: var(--coffee) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.profile-theme-input {
+    background-color: var(--tan) !important; 
+    border: 1px solid var(--toffee-brown) !important;
+    color: var(--coffee) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500 !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 8px !important;
+}
+
+.profile-theme-input::placeholder {
+    color: var(--toffee-brown) !important;
+    opacity: 0.8 !important;
+}
+
+.profile-theme-input:focus {
+    box-shadow: 0 0 0 3px rgba(156, 102, 68, 0.4) !important; 
+    border-color: var(--coffee) !important;
+    outline: none !important;
+}
+
+.profile-save-btn {
+    background-color: var(--coffee) !important;
+    border: none !important;
+    color: var(--cream) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem !important;
+    border-radius: 8px !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.profile-save-btn:hover {
+    background-color: var(--toffee-brown) !important;
+}
+
+.profile-text-muted {
+    color: var(--coffee) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 0.85rem !important;
+    font-style: italic !important;
+    opacity: 0.8 !important;
+}
+
+.profile-forgot-btn {
+    color: var(--coffee) !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    font-family: 'Montserrat', sans-serif !important;
+    text-decoration: underline !important;
+}
+
+.profile-forgot-btn:hover {
+    color: var(--toffee-brown) !important;
+}
