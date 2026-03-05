@@ -46,10 +46,6 @@ app.get('/api/users/:uid', async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
-// Update user profile data (Username and Email)
-=======
->>>>>>> origin/feature/back-up-db
 app.put('/api/users/:uid/profile', async (req, res) => {
     try {
         const { uid } = req.params;
@@ -59,12 +55,8 @@ app.put('/api/users/:uid/profile', async (req, res) => {
         if (username !== undefined) updateData.username = username;
         if (email !== undefined) updateData.email = email;
         
-<<<<<<< HEAD
-        await db.collection('users').doc(uid).update(updateData);
-=======
         // Delegated to DbService
         await DbService.updateUserProfile(uid, updateData);
->>>>>>> origin/feature/back-up-db
 
         res.status(200).json({ message: "Profile updated successfully" });
     } catch (error) {
@@ -172,13 +164,8 @@ app.delete('/api/users/:uid/trash/empty', async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
-// --- PROFILE UPDATE ROUTE ---
-
-=======
 const startSyncWorker = require('./services/syncWorker');
 startSyncWorker();
->>>>>>> origin/feature/back-up-db
 
 // Start the server
 const PORT = process.env.PORT || 5000;
