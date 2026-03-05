@@ -26,6 +26,8 @@ if (!admin.apps.length) {
 }
 const db = admin.firestore();
 
+const DbService = require('./services/dbService');
+
 // --- USER PROFILE ROUTES ---
 
 app.get('/api/users/:uid', async (req, res) => {
@@ -45,16 +47,10 @@ app.get('/api/users/:uid', async (req, res) => {
 app.get('/api/users/:uid/journals', async (req, res) => {
     try {
         const { uid } = req.params;
-        const journalsRef = db.collection('users').doc(uid).collection('journals');
-        // Requires Index: isDeleted (Asc), createdAt (Desc)
-        const snapshot = await journalsRef.where('isDeleted', '==', false).orderBy('createdAt', 'desc').get();
-        
-        const journals = [];
-        snapshot.forEach(doc => journals.push({ id: doc.id, ...doc.data() }));
+        const journals = await DbService.getActiveJournals(uid);
         res.status(200).json(journals);
     } catch (error) {
-        console.error("FIRESTORE ERROR (Journals):", error);
-        res.status(500).json({ error: "Failed to fetch journals" });
+        res.status(500).json({ error: "Failed to fetch journals from all databases" });
     }
 });
 
@@ -62,15 +58,9 @@ app.post('/api/users/:uid/journals', async (req, res) => {
     try {
         const { uid } = req.params;
         const { title, content } = req.body;
-        const newJournal = {
-            title,
-            content,
-            createdAt: Date.now(),
-            isDeleted: false,
-            deletedAt: Date.now() // Initialize deletedAt to prevent Firestore null issues
-        };
-        const docRef = await db.collection('users').doc(uid).collection('journals').add(newJournal);
-        res.status(201).json({ id: docRef.id, ...newJournal });
+        
+        const journal = await DbService.createJournal(uid, { title, content });
+        res.status(201).json(journal);
     } catch (error) {
         res.status(500).json({ error: "Failed to add journal" });
     }
@@ -80,7 +70,8 @@ app.put('/api/users/:uid/journals/:journalId', async (req, res) => {
     try {
         const { uid, journalId } = req.params;
         const { title, content } = req.body;
-        await db.collection('users').doc(uid).collection('journals').doc(journalId).update({ title, content });
+        // Delegated to service
+        await DbService.updateJournal(uid, journalId, { title, content });
         res.status(200).json({ message: "Journal updated successfully" });
     } catch (error) {
         console.error("Error updating journal:", error);
@@ -92,10 +83,8 @@ app.put('/api/users/:uid/journals/:journalId', async (req, res) => {
 app.delete('/api/users/:uid/journals/:journalId', async (req, res) => {
     try {
         const { uid, journalId } = req.params;
-        await db.collection('users').doc(uid).collection('journals').doc(journalId).update({
-            isDeleted: true,
-            deletedAt: Date.now()
-        });
+        // Delegated to service
+        await DbService.softDeleteJournal(uid, journalId);
         res.status(200).json({ message: "Journal entry moved to Trash" });
     } catch (error) {
         res.status(500).json({ error: "Failed to move entry to Trash" });
@@ -108,14 +97,8 @@ app.delete('/api/users/:uid/journals/:journalId', async (req, res) => {
 app.get('/api/users/:uid/trash', async (req, res) => {
     try {
         const { uid } = req.params;
-        // Requires Index: isDeleted (Asc), deletedAt (Desc)
-        const snapshot = await db.collection('users').doc(uid).collection('journals')
-            .where('isDeleted', '==', true)
-            .orderBy('deletedAt', 'desc')
-            .get();
-
-        const journals = [];
-        snapshot.forEach(doc => journals.push({ id: doc.id, ...doc.data() }));
+        // Delegated to service (Will need failover read logic)
+        const journals = await DbService.getTrash(uid);
         res.status(200).json(journals);
     } catch (error) {
         console.error("FIRESTORE ERROR (Trash):", error);
@@ -123,36 +106,11 @@ app.get('/api/users/:uid/trash', async (req, res) => {
     }
 });
 
-// Fixes 404 for Manual Cleanup
-app.post('/api/users/:uid/trash/cleanup', async (req, res) => {
-    try {
-        const { uid } = req.params;
-        const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
-        // Requires Index: isDeleted (Asc), deletedAt (Asc/Desc)
-        const snapshot = await db.collection('users').doc(uid).collection('journals')
-            .where('isDeleted', '==', true)
-            .where('deletedAt', '<=', thirtyDaysAgo)
-            .get();
-
-        if (snapshot.empty) return res.status(200).json({ message: "No cleanup needed" });
-
-        const batch = db.batch();
-        snapshot.docs.forEach(doc => batch.delete(doc.ref));
-        await batch.commit();
-        res.status(200).json({ message: "Old entries cleaned up" });
-    } catch (error) {
-        console.error("Cleanup error:", error);
-        res.status(500).json({ error: "Cleanup failed" });
-    }
-});
-
 app.put('/api/users/:uid/journals/:journalId/restore', async (req, res) => {
     try {
         const { uid, journalId } = req.params;
-        await db.collection('users').doc(uid).collection('journals').doc(journalId).update({
-            isDeleted: false,
-            deletedAt: null
-        });
+        // Delegated to service
+        await DbService.restoreJournal(uid, journalId);
         res.status(200).json({ message: "Journal restored" });
     } catch (error) {
         res.status(500).json({ error: "Restore failed" });
@@ -162,7 +120,8 @@ app.put('/api/users/:uid/journals/:journalId/restore', async (req, res) => {
 app.delete('/api/users/:uid/journals/:journalId/permanent', async (req, res) => {
     try {
         const { uid, journalId } = req.params;
-        await db.collection('users').doc(uid).collection('journals').doc(journalId).delete();
+        // Delegated to service
+        await DbService.permanentDelete(uid, journalId);
         res.status(200).json({ message: "Permanently deleted" });
     } catch (error) {
         res.status(500).json({ error: "Permanent delete failed" });
@@ -173,19 +132,8 @@ app.delete('/api/users/:uid/journals/:journalId/permanent', async (req, res) => 
 app.delete('/api/users/:uid/trash/empty', async (req, res) => {
     try {
         const { uid } = req.params;
-        
-        // Find all journals for this user that are currently in the trash
-        const snapshot = await db.collection('users').doc(uid).collection('journals')
-            .where('isDeleted', '==', true)
-            .get();
-
-        if (snapshot.empty) return res.status(200).json({ message: "Trash is already empty" });
-
-        // Use a Firestore Batch to delete them all at once efficiently
-        const batch = db.batch();
-        snapshot.docs.forEach(doc => batch.delete(doc.ref));
-        await batch.commit();
-
+        // Delegated to service
+        await DbService.emptyTrash(uid);
         res.status(200).json({ message: "Trash emptied successfully" });
     } catch (error) {
         console.error("Error emptying trash:", error);
