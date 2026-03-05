@@ -40,6 +40,8 @@ function App() {
 
         {/* Protect the dashboard route */}
         <Route path="/dashboard" element={user ? <DashboardPage user={user} /> : <Navigate to="/login" />} />
+        <Route path="/add-journal" element={user ? <DashboardPage user={user} /> : <Navigate to="/login" />} />
+        <Route path="/trash" element={user ? <DashboardPage user={user} /> : <Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>
   );
