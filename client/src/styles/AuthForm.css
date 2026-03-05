@@ -37,10 +37,11 @@
     background-position: center;
 }
 
-p {
-    color: white;
-    font-size: 18px;
+.auth-form p {
+    color: var(--coffee);
+    font-size: 15px;
     font-weight: 400;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .logo {
@@ -66,14 +67,15 @@ p {
 
 }
 
-body {
-    background-color: var(--cream);
+.auth-form-panel {
+    background-color: var(--cream); 
+    height: 100vh; 
     font-family: 'Montserrat', 'IM Fell DW Pica', system-ui, Avenir, Helvetica, Arial, sans-serif;
     color: var(--coffee);
 }
 
-.subtitle {
-    color: var(--toffee-brown);
+p.auth-subtitle {
+    color: var(--toffee-brown) !important; 
 }
 
 .auth-header {
@@ -125,7 +127,7 @@ body {
     border-radius: 10px;
     background: var(--Toffee-Brown, #9C6644);
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-    border: none !important;   /* Removes the default Bootstrap blue border */
+    border: none !important;  
     font-size: 19px;
     font-weight: 600;
 }
@@ -155,7 +157,7 @@ body {
     color: #9C6644;
     text-align: center;
     font-family: Montserrat;
-    font-size: 13px;
+    font-size: 12px;
     font-style: italic;
     font-weight: 400;
     line-height: normal;
