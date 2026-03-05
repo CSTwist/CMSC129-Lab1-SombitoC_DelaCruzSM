@@ -69,6 +69,8 @@ const DbService = {
 
     async createJournal(uid, journalData) {
         let createdId;
+        let syncedToFirestore = true; // Initialize flag
+        
         const newJournal = {
             ...journalData,
             createdAt: Date.now(),
@@ -83,7 +85,8 @@ const DbService = {
         } catch (error) {
             console.warn("Firestore write failed. Generating ID for MongoDB fallback...", error.message);
             const crypto = require('crypto');
-            createdId = crypto.randomBytes(10).toString('hex'); 
+            createdId = crypto.randomBytes(10).toString('hex');
+            syncedToFirestore = false; // Flag as unsynced
         }
 
         // 2. Write to Secondary (MongoDB)
@@ -93,6 +96,7 @@ const DbService = {
                 await mongoDb.collection('journals').insertOne({
                     _id: createdId, 
                     userId: uid,
+                    syncedToFirestore: syncedToFirestore, // Save flag to Mongo
                     ...newJournal
                 });
             }
@@ -104,11 +108,14 @@ const DbService = {
     },
 
     async updateJournal(uid, journalId, updateData) {
+        let syncedToFirestore = true; // Initialize flag
+        
         // 1. Write to Primary
         try {
             await firestoreDb.collection('users').doc(uid).collection('journals').doc(journalId).update(updateData);
         } catch (error) {
             console.warn(`Firestore update failed for ${journalId}. Updating MongoDB...`, error.message);
+            syncedToFirestore = false; // Flag as unsynced
         }
 
         // 2. Write to Secondary
@@ -117,7 +124,7 @@ const DbService = {
             if (mongoDb) {
                 await mongoDb.collection('journals').updateOne(
                     { _id: journalId, userId: uid }, 
-                    { $set: updateData }
+                    { $set: { ...updateData, syncedToFirestore: syncedToFirestore } } // Include flag in update
                 );
             }
         } catch (error) {
@@ -126,6 +133,7 @@ const DbService = {
     },
 
     async softDeleteJournal(uid, journalId) {
+        let syncedToFirestore = true; // Initialize flag
         const updateData = {
             isDeleted: true,
             deletedAt: Date.now()
@@ -136,6 +144,7 @@ const DbService = {
             await firestoreDb.collection('users').doc(uid).collection('journals').doc(journalId).update(updateData);
         } catch (error) {
             console.warn(`Firestore soft delete failed for ${journalId}. Updating MongoDB...`, error.message);
+            syncedToFirestore = false; // Flag as unsynced
         }
 
         // 2. Write to Secondary
@@ -144,7 +153,7 @@ const DbService = {
             if (mongoDb) {
                 await mongoDb.collection('journals').updateOne(
                     { _id: journalId, userId: uid }, 
-                    { $set: updateData }
+                    { $set: { ...updateData, syncedToFirestore: syncedToFirestore } } // Include flag in update
                 );
             }
         } catch (error) {
@@ -153,6 +162,7 @@ const DbService = {
     },
 
     async restoreJournal(uid, journalId) {
+        let syncedToFirestore = true; // Initialize flag
         const updateData = {
             isDeleted: false,
             deletedAt: null
@@ -163,6 +173,7 @@ const DbService = {
             await firestoreDb.collection('users').doc(uid).collection('journals').doc(journalId).update(updateData);
         } catch (error) {
             console.warn(`Firestore restore failed for ${journalId}. Updating MongoDB...`, error.message);
+            syncedToFirestore = false; // Flag as unsynced
         }
 
         // 2. Write to Secondary
@@ -171,7 +182,7 @@ const DbService = {
             if (mongoDb) {
                 await mongoDb.collection('journals').updateOne(
                     { _id: journalId, userId: uid }, 
-                    { $set: updateData }
+                    { $set: { ...updateData, syncedToFirestore: syncedToFirestore } } // Include flag in update
                 );
             }
         } catch (error) {
@@ -189,6 +200,7 @@ const DbService = {
             await firestoreDb.collection('users').doc(uid).collection('journals').doc(journalId).delete();
         } catch (error) {
             console.warn(`Firestore permanent delete failed for ${journalId}. Deleting from MongoDB...`, error.message);
+            // No sync flag needed here because the document is being completely removed from the backup DB
         }
 
         // 2. Delete from Secondary

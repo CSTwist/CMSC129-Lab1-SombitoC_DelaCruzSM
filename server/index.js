@@ -141,6 +141,9 @@ app.delete('/api/users/:uid/trash/empty', async (req, res) => {
     }
 });
 
+const startSyncWorker = require('./services/syncWorker');
+startSyncWorker();
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
