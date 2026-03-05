@@ -11,8 +11,8 @@ import 'react-quill/dist/quill.snow.css'; // Standard rich text theme
 function DashboardContent({ user, searchQuery }) {
     const [journals, setJournals] = useState([]);
     const [username, setUsername] = useState("");
+    const [isLoading, setIsLoading] = useState(true); // Added loading state
     
-
     // --- EDIT STATE ---
     const [showEditModal, setShowEditModal] = useState(false);
     const [editEntryId, setEditEntryId] = useState(null);
@@ -52,7 +52,12 @@ function DashboardContent({ user, searchQuery }) {
     }, [user]);
 
     const fetchJournals = async () => {
-        if (!user) return;
+        if (!user) {
+            setIsLoading(false); // Stop loading if there is no user
+            return; 
+        }
+        
+        setIsLoading(true); // Start loading before the fetch
         try {
             const response = await fetch(`http://localhost:5000/api/users/${user.uid}/journals`);
             const data = await response.json();
@@ -67,6 +72,8 @@ function DashboardContent({ user, searchQuery }) {
         } catch (error) {
             console.error("Error fetching journals", error);
             setJournals([]); // Fallback to empty array on network error
+        } finally {
+            setIsLoading(false); // Ensure loading is stopped whether successful or not
         }
     };
 
@@ -150,7 +157,12 @@ function DashboardContent({ user, searchQuery }) {
             <i className="bi bi-plus-square"></i> New entry
             </button>
 
-            {filteredJournals.length === 0 ? (
+            {/* Conditionally render Loading, Empty States, or Journals */}
+            {isLoading ? (
+                <div style={{ color: 'white', marginTop: '20px', fontSize: '1.2rem' }}>
+                    Loading...
+                </div>
+            ) : filteredJournals.length === 0 ? (
                 <div style={{color: 'white', marginTop: '20px'}}>
                     {journals.length === 0 ? "No journal entries yet. Start writing!" : "No journal entries match your search."}
                 </div>
