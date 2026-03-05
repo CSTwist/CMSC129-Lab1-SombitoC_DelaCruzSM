@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, Container, Row, Col, Alert } from 'react-bootstrap';
 import '../styles/AuthForm.css';
+import logoImg from '../assets/logo.png';
 
 // Firebase
 import { auth, db } from '../firebase';
@@ -59,7 +60,9 @@ function AuthForm({ form }) {
                 <Col xs={12} md={6} className="auth-form-panel d-flex align-items-center justify-content-center">
                     <div className="auth-content-wrapper p-0 w-100">
                         <div className='auth-right d-flex align-items-center mb-4'>
-                            <div className='logo me-2'> </div>
+                            <div className='logo me-3'> 
+                                <img src={logoImg} alt="The Journal Logo" className="header-logo-img" />
+                            </div> 
                             <h1 className='auth-title-header m-0'>The Journal</h1>
                         </div>
 
