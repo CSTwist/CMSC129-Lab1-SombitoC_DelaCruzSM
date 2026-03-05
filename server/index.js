@@ -30,15 +30,38 @@ const DbService = require('./services/dbService');
 
 // --- USER PROFILE ROUTES ---
 
+// --- USER PROFILE ROUTES ---
+
 app.get('/api/users/:uid', async (req, res) => {
     try {
         const { uid } = req.params;
-        const userDoc = await db.collection('users').doc(uid).get();
-        if (!userDoc.exists) return res.status(404).json({ error: "User not found" });
-        res.status(200).json(userDoc.data());
+        // Delegated to DbService
+        const userProfile = await DbService.getUserProfile(uid);
+        
+        if (!userProfile) return res.status(404).json({ error: "User not found" });
+        res.status(200).json(userProfile);
     } catch (error) {
         console.error("Error fetching user profile:", error);
         res.status(500).json({ error: "Failed to fetch user profile" });
+    }
+});
+
+app.put('/api/users/:uid/profile', async (req, res) => {
+    try {
+        const { uid } = req.params;
+        const { username, email } = req.body;
+        
+        const updateData = { updatedAt: Date.now() };
+        if (username !== undefined) updateData.username = username;
+        if (email !== undefined) updateData.email = email;
+        
+        // Delegated to DbService
+        await DbService.updateUserProfile(uid, updateData);
+
+        res.status(200).json({ message: "Profile updated successfully" });
+    } catch (error) {
+        console.error("Error updating profile:", error);
+        res.status(500).json({ error: "Failed to update profile" });
     }
 });
 

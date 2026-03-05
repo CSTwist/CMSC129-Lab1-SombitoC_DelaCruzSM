@@ -63,6 +63,23 @@ const DbService = {
         }
     },
 
+    async getUserProfile(uid) {
+        try {
+            // 1. Try Primary
+            const userDoc = await firestoreDb.collection('users').doc(uid).get();
+            if (userDoc.exists) return userDoc.data();
+            return null;
+        } catch (error) {
+            console.warn("Firestore failed. Fetching User Profile from MongoDB...", error.message);
+            // 2. Fallback to Secondary
+            const mongoDb = await connectMongo();
+            if (!mongoDb) throw new Error("Both databases are unreachable.");
+            
+            const userDoc = await mongoDb.collection('users').findOne({ _id: uid });
+            return userDoc;
+        }
+    },
+
     // ==========================================
     // WRITE OPERATIONS (Dual-Write to keep in sync)
     // ==========================================
@@ -239,7 +256,33 @@ const DbService = {
         } catch (error) {
             console.error("MongoDB backup delete failed on empty trash!", error.message);
         }
-    }
+    },
+
+    async updateUserProfile(uid, updateData) {
+        let syncedToFirestore = true;
+
+        // 1. Write to Primary
+        try {
+            await firestoreDb.collection('users').doc(uid).update(updateData);
+        } catch (error) {
+            console.warn(`Firestore update failed for user ${uid}. Updating MongoDB...`, error.message);
+            syncedToFirestore = false; // Flag as unsynced
+        }
+
+        // 2. Write to Secondary
+        try {
+            const mongoDb = await connectMongo();
+            if (mongoDb) {
+                await mongoDb.collection('users').updateOne(
+                    { _id: uid },
+                    { $set: { ...updateData, syncedToFirestore: syncedToFirestore } },
+                    { upsert: true } // If the user doesn't exist in Mongo yet, create them
+                );
+            }
+        } catch (error) {
+            console.error("MongoDB backup write failed on profile update!", error.message);
+        }
+    },
 };
 
 module.exports = DbService;
