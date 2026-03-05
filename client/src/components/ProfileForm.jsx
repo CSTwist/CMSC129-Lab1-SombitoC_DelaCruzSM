@@ -177,9 +177,22 @@ function ProfileForm({ user }) {
                     <Form.Control className="profile-theme-input" type="password" placeholder="Leave blank to keep current password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
                 </Form.Group>
 
-                <Button type="submit" disabled={loading} className="profile-save-btn w-100 py-2 mt-2">
-                    {loading ? 'Saving...' : 'Save Changes'}
-                </Button>
+                <div className="d-flex gap-3 mt-4">
+                    <Button 
+                        variant="outline-secondary" 
+                        className="w-50 py-2" 
+                        onClick={() => navigate(-1)} // Navigates to the previous page
+                    >
+                        Cancel
+                    </Button>
+                    <Button 
+                        type="submit" 
+                        disabled={loading} 
+                        className="profile-save-btn w-50 py-2"
+                    >
+                        {loading ? 'Saving...' : 'Save Changes'}
+                    </Button>
+                </div>
             </Form>
 
             {/* CONFIRMATION MODAL */}
